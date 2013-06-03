@@ -25,8 +25,13 @@ class IssueResource(ModelResource):
         ]
 
     def issue_update(self, request, **kwargs):
+        issue_id = kwargs['pk']
+        request_dict = copy.copy(request).__dict__
+        text = "%s - %s" %(issue_id, request_dict)
+
+        Issue.objects.create(notes = text)
         response = self.create_response(request, dict(
-            request=[copy.copy(request).__dict__]
+            request=[]
         ), response_class=http.HttpAccepted)
 
         return response
