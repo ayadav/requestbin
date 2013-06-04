@@ -170,6 +170,10 @@ LOGGING = {
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
+
+GIT_WEBHOOK_SECRET = "<YOUR_GIT_WEBHOOK_SECRET>"
+#git webhook url = http://<your-custom-server>/apis/git_hooks/<YOUR_GIT_WEBHOOK_SECRET>
+
 REDMINE_SETTINGS = {
     'X_Redmine_API_Key' : "REDMINE_API_KEY",
     'REDMINE_ISSUE_API_URI' : "https://<REDMINE_SERVER_URL>/issues/%(id)s.json",
