@@ -125,8 +125,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
-    'tracker',
-    'apis'
+    'apis',
+    'services.redmine'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -143,6 +143,10 @@ LOGGING = {
         }
     },
     'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
@@ -155,7 +159,24 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        # Catch All Logger -- Captures any other logging
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
+
+REDMINE_SETTINGS = {
+    'X_Redmine_API_Key' : "REDMINE_API_KEY",
+    'REDMINE_ISSUE_API_URI' : "https://<REDMINE_SERVER_URL>/issues/%(id)s.json",
+    'VERIFY_SSL' : False
+}
+
+try:
+    from requestbin.local_settings import *
+except:
+    pass

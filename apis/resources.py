@@ -1,35 +1,28 @@
-from tastypie.resources import ModelResource
-from tastypie import fields
-from tastypie.authorization import DjangoAuthorization
+from tastypie.resources import Resource
 from django.conf.urls import url
-from tastypie import fields, http
-import copy
+from tastypie import http
+from apis.signals import git_hook_received
+import json
 
-from tracker.models import Issue
-
-class IssueResource(ModelResource):
+class GitHookResource(Resource):
 
     class Meta:
-        queryset = Issue.objects.all()
-        resource_name = 'issues'
-        authorization = DjangoAuthorization()
-
+        resource_name = 'git_hooks'
 
     def prepend_urls(self):
         """
         The standard URLs this ``Resource`` should respond to.
         """
         return [
-            url(r"^(?P<resource_name>{0})/(?P<{1}>\d+).json$" .format(self._meta.resource_name, self._meta.detail_uri_name),
-                self.wrap_view('issue_update'), name="issue_update"),
+            url(r"^(?P<resource_name>{0})$" .format(self._meta.resource_name),
+                self.wrap_view('handle_hook'), name="handle_hook"),
         ]
 
-    def issue_update(self, request, **kwargs):
-        issue_id = kwargs['pk']
-        request_dict = copy.copy(request).__dict__
-        text = "%s - %s" %(issue_id, request_dict)
+    def handle_hook(self, request, **kwargs):
+        payload = json.loads(request.REQUEST['payload'])
 
-        Issue.objects.create(notes = text)
+        git_hook_received.send(sender=self, payload=payload)
+
         response = self.create_response(request, dict(
             request=[]
         ), response_class=http.HttpAccepted)

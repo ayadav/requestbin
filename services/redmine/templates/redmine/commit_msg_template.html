@@ -1,0 +1,21 @@
+<p>Code commit by {{commit.author.name}} at {{commit.timestamp}}:</p>
+<p>Message: {{commit.message}}</p>
+<p>Commit Link: <a href="{{commit.url}}">{{commit.url}}</a></p>
+<p>{%if commit.modified %}Modified:{% for file in commit.modified %}</p>
+<ul>
+    <li>{{file}}</li>
+</ul>
+{%endfor%}{%endif%}
+<p>{%if commit.added %}Added:{% for file in commit.added %}</p>
+<ul>
+    <li>{{file}}</li>
+</ul>
+{%endfor%}{%endif%}
+<p>{%if commit.removed %}Deleted:{% for file in commit.removed %}</p>
+<ul>
+    <li>{{file}}</li>
+</ul>
+{%endfor%}{%endif%}
+
+
+
